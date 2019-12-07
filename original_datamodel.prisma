@@ -1,0 +1,103 @@
+type AuthGroup @db(name: "auth_group") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_group_id_seq", initialValue: 1, allocationSize: 1)
+  authGroupPermissions: [AuthGroupPermission]
+  authUserGroups: [AuthUserGroup]
+  name: String! @unique
+}
+
+type AuthGroupPermission @db(name: "auth_group_permissions") @relationTable {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_group_permissions_id_seq", initialValue: 1, allocationSize: 1)
+  group: AuthGroup! @db(name: "group_id")
+  permission: AuthPermission! @db(name: "permission_id")
+}
+
+type AuthPermission @db(name: "auth_permission") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_permission_id_seq", initialValue: 1, allocationSize: 1)
+  authGroupPermissions: [AuthGroupPermission]
+  authUserUserPermissions: [AuthUserUserPermission]
+  codename: String!
+  contentType: DjangoContentType! @db(name: "content_type_id")
+  name: String!
+}
+
+type AuthUser @db(name: "auth_user") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_user_id_seq", initialValue: 1, allocationSize: 1)
+  authUserGroups: [AuthUserGroup]
+  authUserUserPermissions: [AuthUserUserPermission]
+  clipsClip: [ClipsClip]
+  clipsClipvote: [ClipsClipvote]
+  dateJoined: DateTime! @db(name: "date_joined")
+  djangoAdminLog: [DjangoAdminLog]
+  email: String!
+  firstName: String! @db(name: "first_name")
+  isActive: Boolean! @db(name: "is_active")
+  isStaff: Boolean! @db(name: "is_staff")
+  isSuperuser: Boolean! @db(name: "is_superuser")
+  lastLogin: DateTime @db(name: "last_login")
+  lastName: String! @db(name: "last_name")
+  password: String!
+  username: String! @unique
+}
+
+type AuthUserGroup @db(name: "auth_user_groups") @relationTable {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_user_groups_id_seq", initialValue: 1, allocationSize: 1)
+  group: AuthGroup! @db(name: "group_id")
+  user: AuthUser! @db(name: "user_id")
+}
+
+type AuthUserUserPermission @db(name: "auth_user_user_permissions") @relationTable {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "auth_user_user_permissions_id_seq", initialValue: 1, allocationSize: 1)
+  permission: AuthPermission! @db(name: "permission_id")
+  user: AuthUser! @db(name: "user_id")
+}
+
+type ClipsClip @db(name: "clips_clip") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "clips_clip_id_seq", initialValue: 1, allocationSize: 1)
+  clipsClipvote: [ClipsClipvote]
+  description: String!
+  postedBy: AuthUser! @db(name: "posted_by_id")
+  url: String!
+}
+
+type ClipsClipvote @db(name: "clips_clipvote") @relationTable {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "clips_clipvote_id_seq", initialValue: 1, allocationSize: 1)
+  clip: ClipsClip @db(name: "clip_id")
+  user: AuthUser! @db(name: "user_id")
+}
+
+type DjangoAdminLog @db(name: "django_admin_log") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "django_admin_log_id_seq", initialValue: 1, allocationSize: 1)
+  actionFlag: Int! @db(name: "action_flag")
+  actionTime: DateTime! @db(name: "action_time")
+  changeMessage: String! @db(name: "change_message")
+  contentType: DjangoContentType @db(name: "content_type_id")
+  objectId: String @db(name: "object_id")
+  objectRepr: String! @db(name: "object_repr")
+  user: AuthUser! @db(name: "user_id")
+}
+
+type DjangoContentType @db(name: "django_content_type") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "django_content_type_id_seq", initialValue: 1, allocationSize: 1)
+  appLabel: String! @db(name: "app_label")
+  authPermission: [AuthPermission]
+  djangoAdminLog: [DjangoAdminLog]
+  model: String!
+}
+
+type DjangoMigration @db(name: "django_migrations") {
+  id: Int! @id(strategy: SEQUENCE) @sequence(name: "django_migrations_id_seq", initialValue: 1, allocationSize: 1)
+  app: String!
+  applied: DateTime!
+  name: String!
+}
+
+type DjangoSession @db(name: "django_session") {
+  session_key: ID! @id
+  expireDate: DateTime! @db(name: "expire_date")
+  sessionData: String! @db(name: "session_data")
+}
+
+type User {
+  id: ID! @id
+  name: String!
+}

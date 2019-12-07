@@ -1,0 +1,5 @@
+type ClipsClip @db(name: "clips_clip") {
+  id: Int! @id
+  description: String!
+  url: String!
+}

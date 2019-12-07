@@ -1,0 +1,19 @@
+# Root Types
+type Query {
+  clips: [ClipsClip]
+}
+
+type Mutation {
+  createClip(url: String!, description: String!): ClipsClip
+}
+
+type Subscription {
+  newClip: ClipsClip
+}
+
+# DB Types
+type ClipsClip {
+  id: ID!
+  description: String!
+  url: String!
+}
